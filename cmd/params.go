@@ -10,6 +10,7 @@ import (
 
 type parameters struct {
 	BaseBranchName string
+	AllYesFlag     bool
 	ShowVersion    bool
 }
 
@@ -18,6 +19,7 @@ var Version = "" // Overwrite when building
 
 func ParseParameters() {
 	flag.StringVar(&params.BaseBranchName, "base-branch", "", "[Required] Base branch name (e.g. main, develop)")
+	flag.BoolVar(&params.AllYesFlag, "yes", false, "[Opiton] Delete all merged branches without confirmation")
 	flag.BoolVar(&params.ShowVersion, "version", false, "[Opiton] Show version")
 	flag.BoolVar(&params.ShowVersion, "v", false, "[Opiton] Shorthand of -version")
 	flag.Parse()

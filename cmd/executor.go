@@ -73,23 +73,28 @@ func Exec() {
 			continue
 		}
 
-		deleteBranchPrompt(targetBranchName)
+		deleteBranchPrompt(targetBranchName, params.AllYesFlag)
 	}
 }
 
-func deleteBranchPrompt(targetBranchName string) {
+func deleteBranchPrompt(targetBranchName string, yesFlag bool) {
 	loopEndFlag := false
 
 	for !loopEndFlag {
-		fmt.Printf("\nAre you sure to delete \033[33m'%s'\033[0m branch? [y|n|l]: ", targetBranchName)
 		var response string
-		fmt.Scanln(&response)
+
+		if yesFlag {
+			response = "yes"
+		} else {
+			fmt.Printf("\nAre you sure to delete \033[33m'%s'\033[0m branch? [y|n|l]: ", targetBranchName)
+			fmt.Scanln(&response)
+		}
 
 		switch response {
 		case "y", "yes":
-			err := exec.Command("git", "branch", "-D", targetBranchName).Run()
+			_, err := ExecCommand("git", "branch", "-D", targetBranchName)
 			if err != nil {
-				log.Fatal("Command not found: git")
+				log.Fatal(err)
 			}
 
 			fmt.Printf("\033[32mDeleted '%s' branch\033[0m\n", targetBranchName)
