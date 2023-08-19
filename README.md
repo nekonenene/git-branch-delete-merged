@@ -1,4 +1,4 @@
-# Merged Local Branch Remover
+# git-branch-delete-merged
 
 ## Thank you
 

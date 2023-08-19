@@ -1,6 +1,6 @@
 package main
 
-import "github.com/nekonenene/merged-local-branch-remover/cmd"
+import "github.com/nekonenene/git-branch-delete-merged/cmd"
 
 func main() {
 	cmd.Exec()

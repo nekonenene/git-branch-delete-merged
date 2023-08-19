@@ -1,3 +1,3 @@
-module github.com/nekonenene/merged-local-branch-remover
+module github.com/nekonenene/git-branch-delete-merged
 
 go 1.21.0
