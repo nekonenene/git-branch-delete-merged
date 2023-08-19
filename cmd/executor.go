@@ -87,14 +87,12 @@ func deleteBranchPrompt(targetBranchName string) {
 
 		switch response {
 		case "y", "yes":
-			err := exec.Command("git", "branch", "-d", targetBranchName).Run()
+			err := exec.Command("git", "branch", "-D", targetBranchName).Run()
 			if err != nil {
 				log.Fatal("Command not found: git")
 			}
 
 			fmt.Printf("\033[32mDeleted '%s' branch\033[0m\n", targetBranchName)
-			loopEndFlag = true
-		case "n", "no":
 			loopEndFlag = true
 		case "l", "log":
 			gitLog, err := ExecCommand("git", "log", targetBranchName, "-3")
