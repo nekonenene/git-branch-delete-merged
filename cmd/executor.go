@@ -11,32 +11,64 @@ import (
 
 func Exec() {
 	ParseParameters()
+
 	baseBranchName := params.BaseBranchName
+	var targetBranchNames []string
 
 	err := exec.Command("git", "-v").Run()
 	if err != nil {
 		log.Fatal("Command not found: git")
 	}
 
-	output, err := execCommand("git", "for-each-ref", "refs/heads/", "--format=%(refname:short)")
+	localBranchNamesWithNewLine, err := execCommand("git", "for-each-ref", "refs/heads/", "--format=%(refname:short)")
 	if err != nil {
 		log.Fatal(err)
 	}
 
-	branchNames := strings.Split(output, "\n")
-	fmt.Println(branchNames)
+	localBranchNames := strings.Split(localBranchNamesWithNewLine, "\n")
+	fmt.Println(localBranchNames)
 
-	if !slices.Contains(branchNames, baseBranchName) {
+	if !slices.Contains(localBranchNames, baseBranchName) {
 		log.Fatalf("Base branch not found: %s", baseBranchName)
 	}
 
-	for _, branchName := range branchNames {
+	for _, branchName := range localBranchNames {
 		if branchName == baseBranchName {
 			continue
 		}
 
 		fmt.Println(branchName)
+
+		ancestorCommitObjHash, err := execCommand("git", "merge-base", baseBranchName, branchName)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(ancestorCommitObjHash)
+
+		rootTreeObjHash, err := execCommand("git", "rev-parse", fmt.Sprintf("%s^{tree}", branchName))
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(rootTreeObjHash)
+
+		tmpCommitObjHash, err := execCommand("git", "commit-tree", rootTreeObjHash, "-p", ancestorCommitObjHash, "-m", "Temporary commit")
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(tmpCommitObjHash)
+
+		cherryResult, err := execCommand("git", "cherry", baseBranchName, tmpCommitObjHash)
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println(cherryResult)
+
+		if strings.HasPrefix(cherryResult, "- ") {
+			targetBranchNames = append(targetBranchNames, branchName)
+		}
 	}
+
+	fmt.Println(targetBranchNames)
 }
 
 func execCommand(name string, arg ...string) (string, error) {
