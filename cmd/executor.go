@@ -5,5 +5,7 @@ import (
 )
 
 func Exec() {
+	ParseParameters()
+
 	fmt.Println("Hello!")
 }
