@@ -77,6 +77,7 @@ func Exec() {
 	}
 }
 
+// Confirm whether to delete the branch
 func deleteBranchPrompt(targetBranchName string, yesFlag bool) {
 	loopEndFlag := false
 
