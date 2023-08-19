@@ -17,7 +17,7 @@ var params parameters
 var Version = "" // Overwrite when building
 
 func ParseParameters() {
-	flag.StringVar(&params.BaseBranchName, "base-branch", "", "[Required] base branch name")
+	flag.StringVar(&params.BaseBranchName, "base-branch", "", "[Required] Base branch name (e.g. main, develop)")
 	flag.BoolVar(&params.ShowVersion, "version", false, "[Opiton] Show version")
 	flag.BoolVar(&params.ShowVersion, "v", false, "[Opiton] Shorthand of -version")
 	flag.Parse()
