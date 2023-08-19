@@ -41,20 +41,38 @@ func Exec() {
 
 	targetBranchNames = append(targetBranchNames, mergedBranchNames...)
 
-	for _, branchName := range localBranchNames {
-		if branchName == baseBranchName {
+	for _, localBranchName := range localBranchNames {
+		if localBranchName == baseBranchName {
 			continue
 		}
 
-		isSquashed, err := IsSquashedBranch(baseBranchName, branchName)
+		isSquashed, err := IsSquashedBranch(baseBranchName, localBranchName)
 		if err != nil {
 			log.Fatal(err)
 		}
 
 		if isSquashed {
-			targetBranchNames = append(targetBranchNames, branchName)
+			targetBranchNames = append(targetBranchNames, localBranchName)
 		}
 	}
 
 	fmt.Println(targetBranchNames)
+
+	currentBranchName, err := ExecCommand("git", "rev-parse", "--abbrev-ref", "HEAD")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	for _, targetBranchName := range targetBranchNames {
+		if targetBranchName == baseBranchName {
+			continue
+		}
+
+		if targetBranchName == currentBranchName {
+			fmt.Printf("\033[33mSkipped '%s' branch because it is current branch\033[0m\n", targetBranchName)
+			continue
+		}
+
+		fmt.Printf("Target branch: %s\n", targetBranchName)
+	}
 }
