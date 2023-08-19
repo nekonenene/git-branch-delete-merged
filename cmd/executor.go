@@ -36,33 +36,12 @@ func Exec() {
 			continue
 		}
 
-		fmt.Println(branchName)
-
-		ancestorCommitObjHash, err := ExecCommand("git", "merge-base", baseBranchName, branchName)
+		isSquashed, err := IsSquashedBranch(baseBranchName, branchName)
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println(ancestorCommitObjHash)
 
-		rootTreeObjHash, err := ExecCommand("git", "rev-parse", fmt.Sprintf("%s^{tree}", branchName))
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(rootTreeObjHash)
-
-		tmpCommitObjHash, err := ExecCommand("git", "commit-tree", rootTreeObjHash, "-p", ancestorCommitObjHash, "-m", "Temporary commit")
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(tmpCommitObjHash)
-
-		cherryResult, err := ExecCommand("git", "cherry", baseBranchName, tmpCommitObjHash)
-		if err != nil {
-			log.Fatal(err)
-		}
-		fmt.Println(cherryResult)
-
-		if strings.HasPrefix(cherryResult, "- ") {
+		if isSquashed {
 			targetBranchNames = append(targetBranchNames, branchName)
 		}
 	}

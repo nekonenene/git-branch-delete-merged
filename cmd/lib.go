@@ -27,3 +27,32 @@ func ExecCommand(name string, arg ...string) (string, error) {
 
 	return trimmedString, nil
 }
+
+// Check if branch is squash and merged
+func IsSquashedBranch(baseBranchName string, branchName string) (bool, error) {
+	ancestorCommitObjHash, err := ExecCommand("git", "merge-base", baseBranchName, branchName)
+	if err != nil {
+		return false, err
+	}
+
+	rootTreeObjHash, err := ExecCommand("git", "rev-parse", fmt.Sprintf("%s^{tree}", branchName))
+	if err != nil {
+		return false, err
+	}
+
+	tmpCommitObjHash, err := ExecCommand("git", "commit-tree", rootTreeObjHash, "-p", ancestorCommitObjHash, "-m", "Temporary commit")
+	if err != nil {
+		return false, err
+	}
+
+	cherryResult, err := ExecCommand("git", "cherry", baseBranchName, tmpCommitObjHash)
+	if err != nil {
+		return false, err
+	}
+
+	if strings.HasPrefix(cherryResult, "- ") {
+		return true, nil
+	} else {
+		return false, nil
+	}
+}
