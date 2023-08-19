@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"log"
+	"os"
 	"os/exec"
 	"slices"
 	"strings"
@@ -25,7 +26,6 @@ func Exec() {
 	}
 
 	localBranchNames := strings.Split(localBranchNamesWithNewLine, "\n")
-	fmt.Println(localBranchNames)
 
 	if !slices.Contains(localBranchNames, baseBranchName) {
 		log.Fatalf("Base branch not found: %s", baseBranchName)
@@ -56,12 +56,12 @@ func Exec() {
 		}
 	}
 
-	fmt.Println(targetBranchNames)
-
 	currentBranchName, err := ExecCommand("git", "rev-parse", "--abbrev-ref", "HEAD")
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	fmt.Printf("Target branches: %s\n", targetBranchNames)
 
 	for _, targetBranchName := range targetBranchNames {
 		if targetBranchName == baseBranchName {
@@ -73,6 +73,42 @@ func Exec() {
 			continue
 		}
 
-		fmt.Printf("Target branch: %s\n", targetBranchName)
+		deleteBranchPrompt(targetBranchName)
+	}
+}
+
+func deleteBranchPrompt(targetBranchName string) {
+	loopEndFlag := false
+
+	for !loopEndFlag {
+		fmt.Printf("\nAre you sure to delete \033[33m'%s'\033[0m branch? [y|n|l]: ", targetBranchName)
+		var response string
+		fmt.Scanln(&response)
+
+		switch response {
+		case "y", "yes":
+			err := exec.Command("git", "branch", "-d", targetBranchName).Run()
+			if err != nil {
+				log.Fatal("Command not found: git")
+			}
+
+			fmt.Printf("\033[32mDeleted '%s' branch\033[0m\n", targetBranchName)
+			loopEndFlag = true
+		case "n", "no":
+			loopEndFlag = true
+		case "l", "log":
+			gitLog, err := ExecCommand("git", "log", targetBranchName, "-3")
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			fmt.Println(gitLog)
+		case "q", "quit":
+			fmt.Println("Suspends processing")
+			os.Exit(1)
+		default:
+			fmt.Println("Skipped")
+			loopEndFlag = true
+		}
 	}
 }
