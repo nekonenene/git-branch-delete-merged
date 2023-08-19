@@ -7,6 +7,19 @@ import (
 	"strings"
 )
 
+// Remove matched string from slice
+func RemoveFromSlice(slice []string, targetString string) []string {
+	var result []string
+
+	for _, item := range slice {
+		if item != targetString {
+			result = append(result, item)
+		}
+	}
+
+	return result
+}
+
 // Wrapper method of exec.Command
 // error contains stderr message
 func ExecCommand(name string, arg ...string) (string, error) {

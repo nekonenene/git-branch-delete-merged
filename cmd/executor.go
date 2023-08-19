@@ -19,7 +19,7 @@ func Exec() {
 		log.Fatal("Command not found: git")
 	}
 
-	localBranchNamesWithNewLine, err := ExecCommand("git", "for-each-ref", "refs/heads/", "--format=%(refname:short)")
+	localBranchNamesWithNewLine, err := ExecCommand("git", "for-each-ref", "refs/heads/", "--format", "%(refname:short)")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -30,6 +30,16 @@ func Exec() {
 	if !slices.Contains(localBranchNames, baseBranchName) {
 		log.Fatalf("Base branch not found: %s", baseBranchName)
 	}
+
+	mergedBranchNamesWithNewLine, err := ExecCommand("git", "branch", "--merged", baseBranchName, "--format", "%(refname:short)")
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	mergedBranchNames := strings.Split(mergedBranchNamesWithNewLine, "\n")
+	mergedBranchNames = RemoveFromSlice(mergedBranchNames, baseBranchName)
+
+	targetBranchNames = append(targetBranchNames, mergedBranchNames...)
 
 	for _, branchName := range localBranchNames {
 		if branchName == baseBranchName {
