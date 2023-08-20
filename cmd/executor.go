@@ -92,7 +92,7 @@ func deleteBranchPrompt(targetBranchName string, yesFlag bool) {
 		if yesFlag {
 			response = "yes"
 		} else {
-			fmt.Printf("\nAre you sure to delete \033[33m'%s'\033[0m branch? [y|n|l]: ", targetBranchName)
+			fmt.Printf("\nAre you sure to delete \033[33m'%s'\033[0m branch? [y|n|l|d]: ", targetBranchName)
 			fmt.Scanln(&response)
 		}
 
@@ -107,6 +107,11 @@ func deleteBranchPrompt(targetBranchName string, yesFlag bool) {
 			loopEndFlag = true
 		case "l", "log":
 			err := DelegateCommand("git", "log", targetBranchName)
+			if err != nil {
+				log.Fatal(err)
+			}
+		case "d", "diff":
+			err := DelegateCommand("git", "show", targetBranchName, "-v")
 			if err != nil {
 				log.Fatal(err)
 			}

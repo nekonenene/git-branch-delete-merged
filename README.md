@@ -23,7 +23,7 @@ And if the branch to delete exists, you will get a prompt like this:
 ```
 Target branches: [dev1]
 
-Are you sure to delete 'dev1' branch? [y|n|l]:
+Are you sure to delete 'dev1' branch? [y|n|l|d]:
 ```
 
 Please type one and press enter.
@@ -31,6 +31,7 @@ Please type one and press enter.
 * `y`: Yes, delete branch
 * `n`: No, skip deleting
 * `l`: Show git logs
+* `d`: Show the latest commit and its diff
 
 ### Skip prompt
 
