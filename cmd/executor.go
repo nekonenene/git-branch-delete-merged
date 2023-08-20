@@ -92,7 +92,7 @@ func deleteBranchPrompt(targetBranchName string, yesFlag bool) {
 		if yesFlag {
 			response = "yes"
 		} else {
-			fmt.Printf("\nAre you sure to delete \033[33m'%s'\033[0m branch? [y|n|l|d]: ", targetBranchName)
+			fmt.Printf("\nAre you sure to delete \033[33m'%s'\033[0m branch? [y|n|l|d|q|help]: ", targetBranchName)
 			fmt.Scanln(&response)
 		}
 
@@ -118,6 +118,13 @@ func deleteBranchPrompt(targetBranchName string, yesFlag bool) {
 		case "q", "quit":
 			fmt.Println("Suspends processing")
 			os.Exit(1)
+		case "h", "help":
+			fmt.Println("y: Yes, delete the branch")
+			fmt.Println("n: No, skip deleting")
+			fmt.Println("l: Show git logs of the branch")
+			fmt.Println("d: Show the latest commit of the branch and its diff")
+			fmt.Println("q: Quit immediately")
+			fmt.Println("h: Display this help")
 		default:
 			fmt.Println("Skipped")
 			loopEndFlag = true
