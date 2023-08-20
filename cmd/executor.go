@@ -98,12 +98,18 @@ func deleteBranchPrompt(targetBranchName string, yesFlag bool) {
 
 		switch response {
 		case "y", "yes":
-			_, err := ExecCommand("git", "branch", "-D", targetBranchName)
+			latestCommitId, err := ExecCommand("git", "rev-parse", targetBranchName)
+			if err != nil {
+				log.Fatal(err)
+			}
+
+			_, err = ExecCommand("git", "branch", "-D", targetBranchName)
 			if err != nil {
 				log.Fatal(err)
 			}
 
 			fmt.Printf("\033[32mDeleted '%s' branch\033[0m\n", targetBranchName)
+			fmt.Printf("You can recreate this branch with `git branch %s %s`\n", targetBranchName, latestCommitId)
 			loopEndFlag = true
 		case "l", "log":
 			err := DelegateCommand("git", "log", targetBranchName)
