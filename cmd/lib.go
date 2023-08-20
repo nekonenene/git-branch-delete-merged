@@ -3,6 +3,7 @@ package cmd
 import (
 	"bytes"
 	"fmt"
+	"os"
 	"os/exec"
 	"strings"
 )
@@ -32,13 +33,29 @@ func ExecCommand(name string, arg ...string) (string, error) {
 
 	err := cmd.Run()
 	if err != nil {
-		fmt.Printf("%v\n\n%v", err, stderr.String())
 		return stdout.String(), fmt.Errorf("%s command failed:\n\n%s", name, stderr.String())
 	}
 
 	trimmedString := strings.TrimRight(stdout.String(), "\n") // Remove newlines from end of string
 
 	return trimmedString, nil
+}
+
+// Display the command as usual that requires user operation, such as `less` or `top`
+func DelegateCommand(name string, arg ...string) error {
+	var stderr bytes.Buffer
+
+	cmd := exec.Command(name, arg...)
+	cmd.Stdin = os.Stdin
+	cmd.Stdout = os.Stdout
+	cmd.Stderr = &stderr
+
+	err := cmd.Run()
+	if err != nil {
+		return fmt.Errorf("%s command failed:\n\n%s", name, stderr.String())
+	}
+
+	return nil
 }
 
 // Check if branch is squash and merged

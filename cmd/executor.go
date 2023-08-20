@@ -106,12 +106,10 @@ func deleteBranchPrompt(targetBranchName string, yesFlag bool) {
 			fmt.Printf("\033[32mDeleted '%s' branch\033[0m\n", targetBranchName)
 			loopEndFlag = true
 		case "l", "log":
-			gitLog, err := ExecCommand("git", "log", targetBranchName, "-3")
+			err := DelegateCommand("git", "log", targetBranchName)
 			if err != nil {
 				log.Fatal(err)
 			}
-
-			fmt.Println(gitLog)
 		case "q", "quit":
 			fmt.Println("Suspends processing")
 			os.Exit(1)

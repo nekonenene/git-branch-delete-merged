@@ -30,7 +30,7 @@ Please type one and press enter.
 
 * `y`: Yes, delete branch
 * `n`: No, skip deleting
-* `l`: Show latest 3 git logs
+* `l`: Show git logs
 
 ### Skip prompt
 
