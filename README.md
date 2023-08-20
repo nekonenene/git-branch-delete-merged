@@ -28,9 +28,9 @@ Are you sure to delete 'dev1' branch? [y|n|l]:
 
 Please type one and press enter.
 
-* **y**: yes
-* **n**: no
-* **l**: show latest 3 git logs
+* `y`: Yes, delete branch
+* `n`: No, skip deleting
+* `l`: Show latest 3 git logs
 
 ### Skip prompt
 
