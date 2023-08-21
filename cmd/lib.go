@@ -51,7 +51,7 @@ func DelegateCommand(name string, arg ...string) error {
 	cmd.Stderr = &stderr
 
 	err := cmd.Run()
-	if err != nil {
+	if err != nil && !strings.Contains(err.Error(), "broken pipe") {
 		return fmt.Errorf("%s command failed: [%s]\n\n%s", name, err, stderr.String())
 	}
 
