@@ -33,7 +33,7 @@ func ExecCommand(name string, arg ...string) (string, error) {
 
 	err := cmd.Run()
 	if err != nil {
-		return stdout.String(), fmt.Errorf("%s command failed:\n\n%s", name, stderr.String())
+		return stdout.String(), fmt.Errorf("%s command failed: [%s]\n\n%s", name, err, stderr.String())
 	}
 
 	trimmedString := strings.TrimRight(stdout.String(), "\n") // Remove newlines from end of string
@@ -52,7 +52,7 @@ func DelegateCommand(name string, arg ...string) error {
 
 	err := cmd.Run()
 	if err != nil {
-		return fmt.Errorf("%s command failed:\n\n%s", name, stderr.String())
+		return fmt.Errorf("%s command failed: [%s]\n\n%s", name, err, stderr.String())
 	}
 
 	return nil
