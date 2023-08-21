@@ -112,7 +112,7 @@ func deleteBranchPrompt(targetBranchName string, yesFlag bool) {
 			fmt.Printf("You can recreate this branch with `git branch %s %s`\n", targetBranchName, latestCommitId)
 			loopEndFlag = true
 		case "l", "log":
-			err := DelegateCommand("git", "log", targetBranchName)
+			err := DelegateCommand("git", "log", targetBranchName, "-50") // Show only 50 logs to avoid broken pipe error
 			if err != nil {
 				log.Fatal(err)
 			}
