@@ -15,7 +15,7 @@ func Exec() {
 	baseBranchName := params.BaseBranchName
 	var targetBranchNames []string
 
-	err := exec.Command("git", "-v").Run()
+	err := exec.Command("git", "version").Run()
 	if err != nil {
 		log.Fatal("Command not found: git")
 	}
