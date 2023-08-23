@@ -65,7 +65,7 @@ func Exec() {
 		fmt.Printf("\033[33mThere is no branch which merged into '%s'\033[0m\n", baseBranchName)
 		return
 	} else {
-		fmt.Printf("Target branches: %s\n", targetBranchNames)
+		fmt.Printf("Found \033[32m%d\033[0m merged branches: %s\n", len(targetBranchNames), targetBranchNames)
 	}
 
 	for _, targetBranchName := range targetBranchNames {
