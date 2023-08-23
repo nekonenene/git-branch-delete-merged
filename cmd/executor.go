@@ -31,6 +31,8 @@ func Exec() {
 		log.Fatalf("Base branch not found: %s", baseBranchName)
 	}
 
+	fmt.Println("Searching merged branches...")
+
 	mergedBranchNamesWithNewLine, err := ExecCommand("git", "branch", "--merged", baseBranchName, "--format", "%(refname:short)")
 	if err != nil {
 		log.Fatal(err)
