@@ -113,6 +113,9 @@ func deleteBranchPrompt(targetBranchName string, yesFlag bool) {
 			fmt.Printf("\033[32mDeleted '%s' branch\033[0m\n", targetBranchName)
 			fmt.Printf("You can recreate this branch with `git branch %s %s`\n", targetBranchName, latestCommitId)
 			loopEndFlag = true
+		case "n", "no":
+			fmt.Println("Skipped")
+			loopEndFlag = true
 		case "l", "log":
 			err := DelegateCommand("git", "log", targetBranchName, "-100") // Show only 100 logs to avoid broken pipe error
 			if err != nil {
@@ -133,9 +136,6 @@ func deleteBranchPrompt(targetBranchName string, yesFlag bool) {
 			fmt.Println("d: Show the latest commit of the branch and its diff")
 			fmt.Println("q: Quit immediately")
 			fmt.Println("h: Display this help")
-		default:
-			fmt.Println("Skipped")
-			loopEndFlag = true
 		}
 	}
 }
